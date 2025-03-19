@@ -8,3 +8,12 @@ class ContactRequest(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Img(models.Model):
+    img = models.ImageField(upload_to='class_img/', null=True, blank=True)
+
+
+class ClassImage(models.Model):
+    class_img = models.ForeignKey(Img, on_delete=models.CASCADE, null=True, blank=True, related_name='class_images')
+    image = models.ImageField(upload_to='image')

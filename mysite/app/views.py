@@ -1,9 +1,9 @@
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from django.core.mail import send_mail
-from .models import ContactRequest
-from .serializers import ContactRequestSerializer
+from .models import ContactRequest, ClassImage, Img
+from .serializers import ContactRequestSerializer, ClassImageSerializer, ImgSerializer
 
 
 class ContactRequestCreateView(CreateAPIView):
@@ -26,3 +26,14 @@ class ContactRequestCreateView(CreateAPIView):
             self.perform_create(serializer)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ClassImageViewSet(viewsets.ModelViewSet):
+    queryset = ClassImage.objects.all()
+    serializer_class = ClassImageSerializer
+
+
+class ImgViewSet(viewsets.ModelViewSet):
+    queryset = Img.objects.all()
+    serializer_class = ImgSerializer
+
