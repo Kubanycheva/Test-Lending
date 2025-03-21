@@ -7,9 +7,7 @@ router.register(r'class_image', ClassImageViewSet, basename='class_image-detail'
 router.register(r'img', ImgViewSet, basename='img-list')
 
 
-
 urlpatterns = [
-
     path('', include(router.urls)),
     path('api/contact/', ContactRequestCreateView.as_view(), name='contact-api'),
 
