@@ -3,6 +3,7 @@ version: '3'
 services:
 
   web:
+    container_name: web
     build: .
     command: >
       bash -c "python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && gunicorn -b 0.0.0.0:8000 mysite.wsgi:application"
@@ -25,17 +26,38 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  front:
+      container_name: front
+      build: /root/var/www/
+      ports:
+        - "3000:3000"
+      volumes:
+        - front_static:/usr/share/nginx/html
+      hostname: impex-front
+
   nginx:
-    build: ./nginx
+    image: nginx
+    container_name: nginx
+    restart: always
     ports:
-      - "80:80"
+      - 80:80
+      - 443:443
     volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/app/static
       - media_volume:/app/media
+      - front_static:/usr/share/nginx/html
+      - /etc/letsencrypt:/etc/letsencrypt
+
     depends_on:
       - web
+      - front
+    networks:
+      - app-network
+
 
 volumes:
   postgres_data:
   static_volume:
   media_volume:
+  front_static:
